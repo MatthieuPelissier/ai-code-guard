@@ -1,0 +1,24 @@
+# Build
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+TestResults/
+*.trx
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+
+# Base locale et rapports générés
+*.db
+*.db-shm
+*.db-wal
+ai-guard-*.md
+
+# Secrets
+appsettings.*.local.json
+.env

@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restaurer les dépendances
+        run: dotnet restore AiCodeGuard.sln
+
+      - name: Compiler
+        run: dotnet build AiCodeGuard.sln --configuration Release --no-restore
+
+      - name: Tests unitaires
+        run: dotnet test AiCodeGuard.sln --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=tests.trx"
+
+      - name: Barrière qualité IA (code de référence)
+        run: dotnet run --project src/AiCodeGuard.Cli --configuration Release --no-build -- samples/clean --min-score 80 --report ai-guard-report.md
+
+      - name: Démonstration sur du code IA risqué (échec attendu, non bloquant)
+        continue-on-error: true
+        run: dotnet run --project src/AiCodeGuard.Cli --configuration Release --no-build -- samples/ai-generated --report ai-guard-demo.md
+
+      - name: Publier les rapports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapports-qualite
+          path: |
+            ai-guard-report.md
+            ai-guard-demo.md
+            **/TestResults/*.trx

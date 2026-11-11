@@ -1,0 +1,34 @@
+@model IReadOnlyList<RuleInfo>
+@{
+    ViewData["Title"] = "Règles";
+}
+
+<h1>Référentiel de règles</h1>
+<p class="muted">
+    Ces règles traduisent la <strong>charte d'utilisation de l'IA</strong> de l'équipe en contrôles automatiques.
+    Score de départ : 100. Chaque problème retire la pénalité indiquée. Un problème critique entraîne un rejet.
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Règle</th>
+            <th>Gravité</th>
+            <th>Pénalité</th>
+            <th>Pourquoi cette règle face au code généré par IA ?</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td><code>@r.Id</code></td>
+                <td><strong>@r.Title</strong></td>
+                <td><span class="pill sev-@r.Severity.ToLowerInvariant()">@r.SeverityLabel</span></td>
+                <td>-@r.Penalty</td>
+                <td>@r.Rationale</td>
+            </tr>
+        }
+    </tbody>
+</table>

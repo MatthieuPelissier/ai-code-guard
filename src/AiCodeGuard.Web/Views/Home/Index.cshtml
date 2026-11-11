@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "Analyser du code";
+    var llmAvailable = (bool)(ViewBag.LlmAvailable ?? false);
+}
+
+<section class="hero">
+    <h1>Le code généré par l'IA mérite une revue, pas une confiance aveugle.</h1>
+    <p>
+        Collez un extrait C# produit par ChatGPT, Copilot, Codex ou Claude Code.
+        AI Code Guard détecte les failles et les erreurs typiques des LLM, attribue un score
+        de confiance et rend un verdict avant l'intégration dans le dépôt Git.
+    </p>
+</section>
+
+<div class="grid">
+    <section class="card">
+        <form id="analyze-form">
+            @Html.AntiForgeryToken()
+
+            <div class="form-row">
+                <label for="fileName">Nom du fichier</label>
+                <input id="fileName" name="fileName" type="text" value="UserRepository.cs" maxlength="260" />
+            </div>
+
+            <div class="form-row">
+                <div class="label-line">
+                    <label for="code">Code à contrôler</label>
+                    <span class="samples">
+                        Exemples :
+                        <button type="button" class="link-btn" data-sample="bad">code IA risqué</button> ·
+                        <button type="button" class="link-btn" data-sample="good">code propre</button>
+                    </span>
+                </div>
+                <textarea id="code" name="code" spellcheck="false" rows="22"
+                          placeholder="// Collez ici le code généré par l'IA"></textarea>
+            </div>
+
+            <div class="form-row inline">
+                <label class="checkbox">
+                    <input type="checkbox" id="useLlm" disabled="@(!llmAvailable)" />
+                    Relecture complémentaire par LLM
+                    @if (!llmAvailable)
+                    {
+                        <small>(désactivée : aucune clé d'API configurée)</small>
+                    }
+                </label>
+                <button type="submit" class="btn" id="analyze-btn">Analyser</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card" id="result-card">
+        <div id="result-empty" class="empty">
+            <p>Le rapport d'analyse s'affichera ici.</p>
+            <p class="muted">10 règles · score sur 100 · verdict Accepté / À revoir / Rejeté</p>
+        </div>
+
+        <div id="result" hidden>
+            <div class="score-line">
+                <div class="score" id="score">--</div>
+                <div>
+                    <div class="verdict" id="verdict"></div>
+                    <div class="muted" id="summary"></div>
+                </div>
+            </div>
+            <ul class="findings" id="findings"></ul>
+            <div id="llm-review" class="llm" hidden>
+                <h3>Relecture LLM (avis consultatif)</h3>
+                <pre id="llm-text"></pre>
+            </div>
+            <p class="muted small"><a id="details-link" href="#">Voir le rapport enregistré</a></p>
+        </div>
+
+        <div id="error" class="error" hidden></div>
+    </section>
+</div>

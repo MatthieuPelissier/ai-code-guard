@@ -1,0 +1,56 @@
+@model AnalysisResultDto
+@{
+    ViewData["Title"] = "Rapport #" + Model.Id;
+    var source = (string)ViewBag.Source;
+}
+
+<p><a asp-action="Index">← Retour à l'historique</a></p>
+
+<section class="card">
+    <div class="score-line">
+        <div class="score">@Model.Score</div>
+        <div>
+            <div class="verdict verdict-@Model.Verdict.ToLowerInvariant()">@Model.VerdictLabel</div>
+            <div class="muted">
+                <code>@Model.FileName</code> · @Model.LineCount lignes · @Model.Findings.Count problème(s) ·
+                analysé le @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm") UTC
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Findings.Count == 0)
+    {
+        <p>Aucun problème détecté par les règles.</p>
+    }
+    else
+    {
+        <ul class="findings">
+            @foreach (var f in Model.Findings)
+            {
+                <li class="finding sev-@f.Severity.ToLowerInvariant()">
+                    <div class="finding-head">
+                        <span class="pill">@f.RuleId</span>
+                        <strong>@f.Title</strong>
+                        <span class="muted">ligne @f.Line · @f.SeverityLabel</span>
+                    </div>
+                    <div>@f.Message</div>
+                    <code class="snippet">@f.Snippet</code>
+                    <div class="reco">→ @f.Recommendation</div>
+                </li>
+            }
+        </ul>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.LlmReview))
+    {
+        <div class="llm">
+            <h3>Relecture LLM (avis consultatif)</h3>
+            <pre>@Model.LlmReview</pre>
+        </div>
+    }
+</section>
+
+<section class="card">
+    <h3>Code analysé</h3>
+    <pre class="source">@source</pre>
+</section>
