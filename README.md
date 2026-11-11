@@ -1,6 +1,6 @@
 # AI Code Guard
 
-![CI](https://github.com/VOTRE-PSEUDO/ai-code-guard/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/MatthieuPelissier/ai-code-guard/actions/workflows/ci.yml/badge.svg)
 ![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4)
 ![ASP.NET Core MVC](https://img.shields.io/badge/ASP.NET%20Core-MVC-512BD4)
 ![Licence MIT](https://img.shields.io/badge/licence-MIT-green)
@@ -112,7 +112,7 @@ Ajouter une règle = créer une classe + l'enregistrer dans `DefaultRules` + éc
 Prérequis : [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (ou Visual Studio 2022).
 
 ```bash
-git clone https://github.com/VOTRE-PSEUDO/ai-code-guard.git
+git clone https://github.com/MatthieuPelissier/ai-code-guard.git
 cd ai-code-guard
 
 dotnet test                                   # lancer les tests
